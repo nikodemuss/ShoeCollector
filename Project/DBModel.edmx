@@ -1,0 +1,392 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ShoeDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="MsUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Gender" Type="varchar" MaxLength="7" Nullable="false" />
+          <Property Name="BirthDate" Type="date" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="15" />
+          <Property Name="Address" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Profile" Type="varchar" MaxLength="50" />
+          <Property Name="UserRole" Type="char" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShoeTable">
+          <Key>
+            <PropertyRef Name="ShoeId" />
+          </Key>
+          <Property Name="ShoeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShoeName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ShoePrice" Type="int" Nullable="false" />
+          <Property Name="ShoeStock" Type="int" Nullable="false" />
+          <Property Name="ShoeImage" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="TotalSales" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="TransactionId" />
+          </Key>
+          <Property Name="TransactionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TransactionStatus" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="TransactionDate" Type="date" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="Subtotal" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserCart">
+          <Key>
+            <PropertyRef Name="CartId" />
+          </Key>
+          <Property Name="CartId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ShoeId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleId" />
+          </Key>
+          <Property Name="UserRoleId" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="UserRoleName" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__MsUser__UserRole__2A4B4B5E">
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="1" />
+          <End Role="MsUser" Type="Self.MsUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="UserRoleId" />
+            </Principal>
+            <Dependent Role="MsUser">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Transacti__Produ__36B12243">
+          <End Role="ShoeTable" Type="Self.ShoeTable" Multiplicity="1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShoeTable">
+              <PropertyRef Name="ShoeId" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Transacti__UserI__37A5467C">
+          <End Role="MsUser" Type="Self.MsUser" Multiplicity="1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MsUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserCart__ShoeId__2C3393D0">
+          <End Role="ShoeTable" Type="Self.ShoeTable" Multiplicity="1" />
+          <End Role="UserCart" Type="Self.UserCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShoeTable">
+              <PropertyRef Name="ShoeId" />
+            </Principal>
+            <Dependent Role="UserCart">
+              <PropertyRef Name="ShoeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserCart__UserId__2B3F6F97">
+          <End Role="MsUser" Type="Self.MsUser" Multiplicity="1" />
+          <End Role="UserCart" Type="Self.UserCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MsUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCart">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ShoeDBModelStoreContainer">
+          <EntitySet Name="MsUser" EntityType="Self.MsUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShoeTable" EntityType="Self.ShoeTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserCart" EntityType="Self.UserCart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__MsUser__UserRole__2A4B4B5E" Association="Self.FK__MsUser__UserRole__2A4B4B5E">
+            <End Role="UserRole" EntitySet="UserRole" />
+            <End Role="MsUser" EntitySet="MsUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Transacti__Produ__36B12243" Association="Self.FK__Transacti__Produ__36B12243">
+            <End Role="ShoeTable" EntitySet="ShoeTable" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Transacti__UserI__37A5467C" Association="Self.FK__Transacti__UserI__37A5467C">
+            <End Role="MsUser" EntitySet="MsUser" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserCart__ShoeId__2C3393D0" Association="Self.FK__UserCart__ShoeId__2C3393D0">
+            <End Role="ShoeTable" EntitySet="ShoeTable" />
+            <End Role="UserCart" EntitySet="UserCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserCart__UserId__2B3F6F97" Association="Self.FK__UserCart__UserId__2B3F6F97">
+            <End Role="MsUser" EntitySet="MsUser" />
+            <End Role="UserCart" EntitySet="UserCart" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ShoeDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MsUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Gender" Type="String" MaxLength="7" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BirthDate" Type="DateTime" Precision="0" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Profile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserRole" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="UserRole1" Relationship="Self.FK__MsUser__UserRole__2A4B4B5E" FromRole="MsUser" ToRole="UserRole" />
+          <NavigationProperty Name="UserCart" Relationship="Self.FK__UserCart__UserId__2B3F6F97" FromRole="MsUser" ToRole="UserCart" />
+          <NavigationProperty Name="Transaction" Relationship="ShoeDBModel.FK__Transacti__UserI__37A5467C" FromRole="MsUser" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="ShoeTable">
+          <Key>
+            <PropertyRef Name="ShoeId" />
+          </Key>
+          <Property Name="ShoeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShoeName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ShoePrice" Type="Int32" Nullable="false" />
+          <Property Name="ShoeStock" Type="Int32" Nullable="false" />
+          <Property Name="ShoeImage" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TotalSales" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserCart" Relationship="Self.FK__UserCart__ShoeId__2C3393D0" FromRole="ShoeTable" ToRole="UserCart" />
+          <NavigationProperty Name="Transaction" Relationship="ShoeDBModel.FK__Transacti__Produ__36B12243" FromRole="ShoeTable" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="UserCart">
+          <Key>
+            <PropertyRef Name="CartId" />
+          </Key>
+          <Property Name="CartId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ShoeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MsUser" Relationship="Self.FK__UserCart__UserId__2B3F6F97" FromRole="UserCart" ToRole="MsUser" />
+          <NavigationProperty Name="ShoeTable" Relationship="Self.FK__UserCart__ShoeId__2C3393D0" FromRole="UserCart" ToRole="ShoeTable" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleId" />
+          </Key>
+          <Property Name="UserRoleId" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="UserRoleName" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="MsUser" Relationship="Self.FK__MsUser__UserRole__2A4B4B5E" FromRole="UserRole" ToRole="MsUser" />
+        </EntityType>
+        <Association Name="FK__MsUser__UserRole__2A4B4B5E">
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="1" />
+          <End Role="MsUser" Type="Self.MsUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserRole">
+              <PropertyRef Name="UserRoleId" />
+            </Principal>
+            <Dependent Role="MsUser">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserCart__UserId__2B3F6F97">
+          <End Role="MsUser" Type="Self.MsUser" Multiplicity="1" />
+          <End Role="UserCart" Type="Self.UserCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MsUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCart">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserCart__ShoeId__2C3393D0">
+          <End Role="ShoeTable" Type="Self.ShoeTable" Multiplicity="1" />
+          <End Role="UserCart" Type="Self.UserCart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShoeTable">
+              <PropertyRef Name="ShoeId" />
+            </Principal>
+            <Dependent Role="UserCart">
+              <PropertyRef Name="ShoeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ShoeDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MsUser" EntityType="Self.MsUser" />
+          <EntitySet Name="ShoeTable" EntityType="Self.ShoeTable" />
+          <EntitySet Name="UserCart" EntityType="Self.UserCart" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" />
+          <AssociationSet Name="FK__MsUser__UserRole__2A4B4B5E" Association="Self.FK__MsUser__UserRole__2A4B4B5E">
+            <End Role="UserRole" EntitySet="UserRole" />
+            <End Role="MsUser" EntitySet="MsUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserCart__UserId__2B3F6F97" Association="Self.FK__UserCart__UserId__2B3F6F97">
+            <End Role="MsUser" EntitySet="MsUser" />
+            <End Role="UserCart" EntitySet="UserCart" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserCart__ShoeId__2C3393D0" Association="Self.FK__UserCart__ShoeId__2C3393D0">
+            <End Role="ShoeTable" EntitySet="ShoeTable" />
+            <End Role="UserCart" EntitySet="UserCart" />
+          </AssociationSet>
+          <EntitySet Name="Transaction" EntityType="ShoeDBModel.Transaction" />
+          <AssociationSet Name="FK__Transacti__UserI__37A5467C" Association="ShoeDBModel.FK__Transacti__UserI__37A5467C">
+            <End Role="MsUser" EntitySet="MsUser" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Transacti__Produ__36B12243" Association="ShoeDBModel.FK__Transacti__Produ__36B12243">
+            <End Role="ShoeTable" EntitySet="ShoeTable" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="TransactionId" />
+          </Key>
+          <Property Name="TransactionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TransactionStatus" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="TransactionDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Subtotal" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MsUser" Relationship="ShoeDBModel.FK__Transacti__UserI__37A5467C" FromRole="Transaction" ToRole="MsUser" />
+          <NavigationProperty Name="ShoeTable" Relationship="ShoeDBModel.FK__Transacti__Produ__36B12243" FromRole="Transaction" ToRole="ShoeTable" />
+        </EntityType>
+        <Association Name="FK__Transacti__UserI__37A5467C">
+          <End Type="ShoeDBModel.MsUser" Role="MsUser" Multiplicity="1" />
+          <End Type="ShoeDBModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MsUser">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Transacti__Produ__36B12243">
+          <End Type="ShoeDBModel.ShoeTable" Role="ShoeTable" Multiplicity="1" />
+          <End Type="ShoeDBModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShoeTable">
+              <PropertyRef Name="ShoeId" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ShoeDBModelStoreContainer" CdmEntityContainer="ShoeDBEntities">
+          <EntitySetMapping Name="MsUser">
+            <EntityTypeMapping TypeName="ShoeDBModel.MsUser">
+              <MappingFragment StoreEntitySet="MsUser">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Profile" ColumnName="Profile" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShoeTable">
+            <EntityTypeMapping TypeName="ShoeDBModel.ShoeTable">
+              <MappingFragment StoreEntitySet="ShoeTable">
+                <ScalarProperty Name="ShoeId" ColumnName="ShoeId" />
+                <ScalarProperty Name="ShoeName" ColumnName="ShoeName" />
+                <ScalarProperty Name="ShoePrice" ColumnName="ShoePrice" />
+                <ScalarProperty Name="ShoeStock" ColumnName="ShoeStock" />
+                <ScalarProperty Name="ShoeImage" ColumnName="ShoeImage" />
+                <ScalarProperty Name="TotalSales" ColumnName="TotalSales" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCart">
+            <EntityTypeMapping TypeName="ShoeDBModel.UserCart">
+              <MappingFragment StoreEntitySet="UserCart">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="CartId" ColumnName="CartId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ShoeId" ColumnName="ShoeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRole">
+            <EntityTypeMapping TypeName="ShoeDBModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRole">
+                <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
+                <ScalarProperty Name="UserRoleName" ColumnName="UserRoleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transaction">
+            <EntityTypeMapping TypeName="ShoeDBModel.Transaction">
+              <MappingFragment StoreEntitySet="Transaction">
+                <ScalarProperty Name="Subtotal" ColumnName="Subtotal" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
+                <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
